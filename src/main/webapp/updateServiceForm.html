@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Service</title>
-    <style>
+       <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
         }
+
         .container {
             max-width: 500px;
             margin: 50px auto;
@@ -19,28 +20,32 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         h2 {
             text-align: center;
             margin-bottom: 20px;
         }
+
         form {
             display: flex;
             flex-direction: column;
         }
+
         label {
             margin-bottom: 8px;
             font-weight: bold;
         }
-        input[type="text"] {
-            padding: 8px;
+
+        input[type="text"], input[type="submit"] {
+            padding: 10px;
             margin-bottom: 15px;
             border-radius: 4px;
             border: 1px solid #ccc;
             box-sizing: border-box;
             width: 100%;
         }
-        input[type="submit"] {
-            padding: 10px 20px;
+
+        .fetch-button {
             background-color: #007bff;
             color: #fff;
             border: none;
@@ -49,7 +54,8 @@
             font-size: 16px;
             transition: background-color 0.3s;
         }
-        input[type="submit"]:hover {
+
+        .fetch-button:hover {
             background-color: #0056b3;
         }
     </style>
@@ -57,9 +63,11 @@
 <body>
     <div class="container">
         <h2>Update Service</h2>
-        <form action="/service-management-system/UpdateServiceServlet" method="post">
+        <form id="updateServiceForm">
             <label for="service_id">Enter Service ID:</label>
             <input type="text" id="service_id" name="service_id" placeholder="Enter Service ID:">
+            <!-- Button for fetching service data -->
+            <button id="fetchButton" class="fetch-button">Fetch Service Data</button>
     
             <label for="name">Enter New Service Name:</label>
             <input type="text" id="name" name="name" placeholder="Enter New Service Name:">
@@ -73,5 +81,77 @@
             <input type="submit" value="Update Service">
         </form>
     </div>
+
+    <script>
+        // Function to fetch service data
+        document.getElementById('fetchButton').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default button behavior
+            
+            // Get service ID from the form input
+            var serviceId = document.getElementById('service_id').value;
+            
+            // Create a new XMLHttpRequest object
+            var xhr = new XMLHttpRequest();
+            
+            // Configure the request
+            xhr.open('POST', '/service-management-system/GetServiceServlet', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            
+            // Define the function to handle the response
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var serviceData = JSON.parse(xhr.responseText);
+                        if (serviceData.error) {
+                            alert(serviceData.error); // Display error message if service not found
+                        } else {
+                            // Populate input fields with fetched data
+                            document.getElementById('name').value = serviceData.name;
+                            document.getElementById('description').value = serviceData.description;
+                            document.getElementById('price').value = serviceData.price;
+                        }
+                    } else {
+                        alert('Error occurred while fetching service data');
+                    }
+                }
+            };
+            
+            // Send the request with service ID
+            xhr.send('service_id=' + encodeURIComponent(serviceId));
+        });
+
+        // Function to update service data
+        document.getElementById('updateServiceForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            // Get updated data from the form inputs
+            var serviceId = document.getElementById('service_id').value;
+            var newName = document.getElementById('name').value;
+            var newDescription = document.getElementById('description').value;
+            var newPrice = document.getElementById('price').value;
+            
+            // Create a new XMLHttpRequest object
+            var xhr = new XMLHttpRequest();
+            
+            // Configure the request
+            xhr.open('POST', '/service-management-system/UpdateServiceServlet', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            
+            // Define the function to handle the response
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        alert('Service updated successfully');
+                        // Optionally, you can redirect to another page or perform other actions upon successful update
+                    } else {
+                        alert('Error occurred while updating service');
+                    }
+                }
+            };
+            
+            // Send the request with updated data
+            xhr.send('service_id=' + encodeURIComponent(serviceId) + '&name=' + encodeURIComponent(newName) + '&description=' + encodeURIComponent(newDescription) + '&price=' + encodeURIComponent(newPrice));
+        });
+    </script>
 </body>
 </html>
