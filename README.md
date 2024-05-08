@@ -1,8 +1,8 @@
-Service Management System
+**Service Management System**
 
 This is a Service Management System designed to streamline the management of services within an organization. It utilizes Java Enterprise Edition (Java EE) for backend development and MySQL for database management.
 
-Features
+## Features
 
 - **User Authentication**: Secure login and authentication system for users.
 - **Service Management**: CRUD operations for managing services offered by the organization.
