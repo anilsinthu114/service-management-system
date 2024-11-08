@@ -20,7 +20,7 @@ This is a Service Management System designed to streamline the management of ser
 
 1. **Database Setup**:
    - Install MySQL and create a new database for the application.
-   - Execute the SQL scripts provided in the `database` directory to create tables and populate initial data.
+   - Execute the SQL scripts provided in the `database` directory named `schema.sql` to create tables and populate initial data.
 
 2. **Backend Setup**:
    - Import the project into your preferred Java IDE.
